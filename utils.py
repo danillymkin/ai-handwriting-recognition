@@ -1,7 +1,5 @@
 import numpy as np
 
-from constants import SIGMOID_SLOPE_FACTOR
-
 
 def soft_max(t):
     # get exp vector and normalization
