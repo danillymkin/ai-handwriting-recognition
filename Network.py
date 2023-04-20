@@ -4,8 +4,8 @@ import numpy as np
 import sys
 import matplotlib.pyplot as plt
 
-from constants import LEARNING_RATE, MAX_EPOCHS, SIGMOID_SLOPE_FACTOR
-from utils import sigmoid, soft_max, to_full, sparse_cross_entropy, sigmoid_deriv, relu, relu_deriv
+from constants import LEARNING_RATE, MAX_EPOCHS
+from utils import soft_max, to_full, sparse_cross_entropy, relu, relu_deriv
 
 
 class Network:
@@ -49,24 +49,18 @@ class Network:
 
     def predict(self, x):
         t1 = x @ self.W1 + self.b1
-        # h1 = sigmoid(t1, SIGMOID_SLOPE_FACTOR[0])
         h1 = relu(t1)
         t2 = h1 @ self.W2 + self.b2
 
-        # h2 = sigmoid(t2, SIGMOID_SLOPE_FACTOR[1])
-        # z = soft_max(h2)
         z = soft_max(t2)
 
         return z
 
     def forward(self, x, y):
         self.t1 = x @ self.W1 + self.b1
-        # self.h1 = sigmoid(self.t1, SIGMOID_SLOPE_FACTOR[0])
         self.h1 = relu(self.t1)
         self.t2 = self.h1 @ self.W2 + self.b2
 
-        # self.h2 = sigmoid(self.t2, SIGMOID_SLOPE_FACTOR[1])
-        # z = soft_max(self.h2)
         z = soft_max(self.t2)
 
         e = sparse_cross_entropy(z, y)
@@ -79,7 +73,6 @@ class Network:
         self.dE_db2 = dE_dt2
         dE_dh1 = dE_dt2 @ self.W2.T
 
-        # dE_dt1 = dE_dh1 * sigmoid_deriv(self.t1, SIGMOID_SLOPE_FACTOR[0])
         dE_dt1 = dE_dh1 * relu_deriv(self.t1)
 
         self.dE_dW1 = x.T @ dE_dt1
@@ -107,7 +100,6 @@ class Network:
         plt.show()
 
     def test(self, x):
-        # print(x)
         probs = self.predict(x)
         pred_class = np.argmax(probs)
         class_names = ['0', '1', 'Ж', 'Ф']
